@@ -1,0 +1,43 @@
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dot_net_backend_crm
+    working_dir: /app
+
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5000
+      DOTNET_USE_POLLING_FILE_WATCHER: "1"
+
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?Set ConnectionStrings__DefaultConnection in .env}
+
+    ports:
+      - "5000:5000"
+
+    volumes:
+      - .:/app
+      - backend_bin:/app/bin
+      - backend_obj:/app/obj
+
+    command:
+      - dotnet
+      - watch
+      - run
+      - --project
+      - backend.csproj
+      - --urls
+      - http://0.0.0.0:5000
+
+    networks:
+      - crm
+
+volumes:
+  backend_bin:
+  backend_obj:
+
+networks:
+  crm:
+    name: dot-net-crm-local-network
