@@ -13,14 +13,22 @@ services:
       DOTNET_USE_POLLING_FILE_WATCHER: "1"
 
       ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?Set ConnectionStrings__DefaultConnection in .env}
+      Authentication__Jwt__SigningKeyBase64: ${AUTH_JWT_SIGNING_KEY:?Set AUTH_JWT_SIGNING_KEY in .env}
+      DataProtection__KeysPath: /root/.aspnet/DataProtection-Keys
+      Email__Smtp__Host: mailpit
 
     ports:
      - "5002:5000"
+
+    depends_on:
+      mailpit:
+        condition: service_started
 
     volumes:
       - .:/app
       - backend_bin:/app/bin
       - backend_obj:/app/obj
+      - backend_data_protection:/root/.aspnet/DataProtection-Keys
 
     command:
       - dotnet
@@ -37,6 +45,7 @@ services:
 volumes:
   backend_bin:
   backend_obj:
+  backend_data_protection:
 
 networks:
   crm:

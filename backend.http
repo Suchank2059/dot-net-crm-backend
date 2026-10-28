@@ -1,6 +1,77 @@
-@backend_HostAddress = http://localhost:5283
+@backend_HostAddress = http://localhost:5002
+@api = {{backend_HostAddress}}/api/v1/auth
+@email = someone@example.com
 
-GET {{backend_HostAddress}}/weatherforecast/
+### Get a CSRF request token and cookie before refresh/sign-out.
+GET {{api}}/csrf-token
 Accept: application/json
 
-###
+### Register. Check Mailpit at http://localhost:8025 and complete the frontend link.
+POST {{api}}/sign-up
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "ChangeThis!Password123"
+}
+
+### Sign in after confirming the email.
+POST {{api}}/sign-in
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "ChangeThis!Password123"
+}
+
+### Verify an account using the token from Mailpit.
+POST {{api}}/verify-email
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "token": "{{emailConfirmationToken}}"
+}
+
+### Request another verification message; response does not reveal account existence.
+POST {{api}}/resend-verification
+Content-Type: application/json
+
+{
+  "email": "{{email}}"
+}
+
+### Refresh. Copy RequestToken from csrf-token response to X-CSRF-TOKEN.
+POST {{api}}/refresh-token
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Request a password reset; response does not reveal account existence.
+POST {{api}}/forgot-password
+Content-Type: application/json
+
+{
+  "email": "{{email}}"
+}
+
+### Reset the password using userId and token from the Mailpit link.
+POST {{api}}/reset-password
+Content-Type: application/json
+
+{
+  "userId": "{{userId}}",
+  "token": "{{passwordResetToken}}",
+  "newPassword": "NewChangeThis!Password123"
+}
+
+### Sign out. Requires a valid access token, refresh cookie, and CSRF request token.
+POST {{api}}/sign-out
+Authorization: Bearer {{accessToken}}
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Revoke every refresh session for the authenticated account.
+POST {{api}}/revoke-all-sessions
+Authorization: Bearer {{accessToken}}
+
+### Get the authenticated account.
+GET {{api}}/me
+Authorization: Bearer {{accessToken}}

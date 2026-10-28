@@ -2,13 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Crm.Api</AssemblyName>
+    <RootNamespace>Crm.Api</RootNamespace>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.14" />
-    <PackageReference Include="MySql.EntityFrameworkCore" Version="10.0.12" />
+    <Compile Remove="Application/**/*.cs;Domain/**/*.cs;Infrastructure/**/*.cs" />
+    <ProjectReference Include="Application/Crm.Application.csproj" />
+    <ProjectReference Include="Infrastructure/Crm.Infrastructure.csproj" />
+    <PackageReference Include="Asp.Versioning.Mvc" Version="10.2.1" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="NSwag.AspNetCore" Version="14.7.1" />
   </ItemGroup>
 
