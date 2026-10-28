@@ -15,7 +15,7 @@ services:
       ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?Set ConnectionStrings__DefaultConnection in .env}
 
     ports:
-      - "5000:5000"
+     - "5002:5000"
 
     volumes:
       - .:/app
