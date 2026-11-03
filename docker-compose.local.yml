@@ -11,9 +11,13 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: http://+:5000
       DOTNET_USE_POLLING_FILE_WATCHER: "1"
-
-      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection:?Set ConnectionStrings__DefaultConnection in .env}
-
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings_DefaultConnection:?Set ConnectionStrings__DefaultConnection in .env}
+      Jwt__SecretKey: ${JWT_SECRET:?Set JWT_SECRET in .env}
+      Jwt__Issuer: ${JWT_ISSUER:-Crm.Api}
+      Jwt__Audience: ${JWT_AUDIENCE:-Crm.Api}
+      Jwt__AccessTokenMinutes: ${JWT_ACCESS_TOKEN_MINUTES:-15}
+      Jwt__RefreshTokenDays: ${JWT_REFRESH_TOKEN_DAYS:-7}
+      Jwt__SessionAbsoluteDays: ${JWT_SESSION_ABSOLUTE_DAYS:-30}
     ports:
      - "5002:5000"
 
