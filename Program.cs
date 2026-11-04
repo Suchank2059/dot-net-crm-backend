@@ -1,9 +1,10 @@
-using Crm.Api.Configuration;
 using Crm.Api.Infrastructure.Persistance;
+using Crm.Api.Modules.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Crm.Api.Infrastructure.Exceptions;
 using Crm.Api.Common.Api;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,26 +33,16 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
     };
 });
 
-
-builder.Services
-    .AddDbContext<ApplicationDbContext>(options =>
+// Configure Database Context
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseMySQL(
             builder.Configuration.GetConnectionString("DefaultConnection") ??
                 throw new InvalidOperationException("Connection string 'DefaultConnection' not found.")
         ));
 
-builder.Services
-    .AddOptions<JwtOptions>()
-    .BindConfiguration(JwtOptions.SectionName)
-    .Validate(options =>
-        !string.IsNullOrWhiteSpace(options.SecretKey),
-        "JWT SecretKey is required.")
-    .ValidateOnStart();
-
+builder.Services.AddAuthenticationModule(builder.Configuration);
 
 var app = builder.Build();
-
-
 
 // Register exception handling early in the pipeline
 app.UseExceptionHandler();
